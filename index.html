@@ -3,13 +3,11 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        .app {
-            padding: 20px 50px;
-        }
 
         .loading {
             position: fixed;
@@ -31,11 +29,14 @@
             color: #303133;
             padding: 20px;
         }
-
+        .card-body{
+            overflow-x: auto;
+        }
         .activity .item {
             display: flex;
             justify-content: space-between;
             padding: 10px;
+            flex-wrap: wrap;
         }
 
         .activity2 .item {
@@ -43,6 +44,12 @@
         }
 
         .activity .item div {
+            /* max-width: 50%; */
+        }
+        .key{
+            flex: 1;
+        }
+        .value{
             width: 50%;
         }
     </style>
@@ -55,26 +62,28 @@
             <h2>七日签到活动</h2>
             <div class="card-wrap">
                 <div class="text item">
-                    <div>用户总数：</div>
-                    <div>{{ signinData.user_amount }}</div>
+                    <div class="key">用户总数：</div>
+                    <div class="value">{{ signinData.user_amount }}</div>
                 </div>
             </div>
         </div>
         <div class="activity activity2">
             <h2>人拉人活动</h2>
             <div class="card-wrap">
-                <div class="text item">
-                    <div>用户总数：</div>
-                    <div>{{ inviteData.register_user }}</div>
-                </div>
-                <div class="text item">
-                    <div>被邀请用户：</div>
-                    <div>{{ inviteData.invited_user }}</div>
-                </div>
-                <h3>奖励领取详情：</h3>
-                <div class="text item" v-for="(value,key) in inviteData.award_info">
-                    <div>{{key}}</div>
-                    <div>{{value}}</div>
+                <div class="card-body">
+                    <div class="text item">
+                        <div class="key">用户总数：</div>
+                        <div class="value">{{ inviteData.register_user }}</div>
+                    </div>
+                    <div class="text item">
+                        <div class="key">被邀请用户：</div>
+                        <div class="value">{{ inviteData.invited_user }}</div>
+                    </div>
+                    <h3>奖励领取详情：</h3>
+                    <div class="text item" v-for="(value,key) in inviteData.award_info">
+                        <div class="key">{{key}}</div>
+                        <div class="value">{{value}}</div>
+                    </div>
                 </div>
             </div>
         </div>
