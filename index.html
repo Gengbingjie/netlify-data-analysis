@@ -7,7 +7,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        .card-wrap{
+        .app {
+            padding: 20px 50px;
+        }
+
+        .loading {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            background-color: rgba(255, 255, 255, 1);
+            text-align: center;
+            line-height: 100vh;
+        }
+
+        .card-wrap {
             box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);
             border-radius: 4px;
             border: 1px solid #e4e7ed;
@@ -16,21 +31,26 @@
             color: #303133;
             padding: 20px;
         }
-        .activity .item{
+
+        .activity .item {
             display: flex;
             justify-content: space-between;
             padding: 10px;
         }
-        .activity2 .item{
+
+        .activity2 .item {
             border-bottom: 1px solid #eee;
         }
-        .activity .item div{
+
+        .activity .item div {
             width: 50%;
         }
     </style>
 </head>
+
 <body>
-    <div id="app">
+    <div id="app" class="app">
+        <div class="loading" v-show="loading">加载中......</div>
         <div class="activity activity1">
             <h2>七日签到活动</h2>
             <div class="card-wrap">
@@ -74,17 +94,25 @@
         setup() {
             let signinData = reactive({})
             let inviteData = reactive({})
-            fetch(signinUrl).then(res => res.json())
-                .then(data => {
-                    Object.assign(signinData, data.data)
-                    console.log(signinData)
+            let loading = ref(true)
+            const getInitData = (url) => {
+                return new Promise((resolve, reject) => {
+                    fetch(url).then(res => res.json())
+                        .then(data => {
+                            resolve(data)
+                        })
+                        .catch(err=>{
+                            reject(err)
+                        })
                 })
-            fetch(inviteUrl).then(res => res.json())
-                .then(data => {
-                    Object.assign(inviteData, data.data)
-                    console.log(inviteData)
-                })
+            }
+            Promise.all([getInitData(signinUrl),getInitData(inviteUrl)]).then(([res1,res2])=>{
+                Object.assign(signinData, res1.data)
+                Object.assign(inviteData, res2.data)
+                loading.value = false
+            })
             return {
+                loading,
                 signinData,
                 inviteData
             }
