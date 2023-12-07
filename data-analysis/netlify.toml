@@ -1,0 +1,14 @@
+[functions]
+directory = "netlify/functions"
+
+[build]
+command = "npm install"
+
+[dev]
+port = 9999
+
+[[redirects]]
+force = true
+from = "/api/*"
+status = 200
+to = "/.netlify/functions/api/:splat"
