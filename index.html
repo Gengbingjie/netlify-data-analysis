@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport">
@@ -65,7 +64,7 @@
             <div class="card-wrap">
                 <div class="text item">
                     <div class="key">用户总数：</div>
-                    <div class="value">{{ signinData.user_amount }}</div>
+                    <div class="value">{{ thousandFilter(signinData.user_amount) }}</div>
                 </div>
             </div>
         </div>
@@ -75,16 +74,16 @@
                 <div class="card-body">
                     <div class="text item">
                         <div class="key">用户总数：</div>
-                        <div class="value">{{ inviteData.register_user }}</div>
+                        <div class="value">{{ thousandFilter(inviteData.register_user) }}</div>
                     </div>
                     <div class="text item">
                         <div class="key">被邀请用户：</div>
-                        <div class="value">{{ inviteData.invited_user }}</div>
+                        <div class="value">{{ thousandFilter(inviteData.invited_user) }}</div>
                     </div>
                     <h3>奖励领取详情：</h3>
                     <div class="text item" v-for="(value,key) in inviteData.award_info">
                         <div class="key">{{key}}</div>
-                        <div class="value">{{value}}</div>
+                        <div class="value">{{thousandFilter(value)}}</div>
                     </div>
                 </div>
             </div>
@@ -100,7 +99,7 @@
     const domain = location.origin
     const signinUrl = `${domain}/api/signin`
     const inviteUrl = `${domain}/api/invite`
-
+    
     const app = createApp({
         setup() {
             let signinData = reactive({})
@@ -122,10 +121,16 @@
                 Object.assign(inviteData, res2.data)
                 loading.value = false
             })
+            const thousandFilter = (v) =>{
+                if(!v) return v
+                if( typeof v === 'number') v = v.toString()
+                return v.replace(/(\d)(?=(\d{3})+$)/g,'$1,')
+            }
             return {
                 loading,
                 signinData,
-                inviteData
+                inviteData,
+                thousandFilter
             }
         }
     })
